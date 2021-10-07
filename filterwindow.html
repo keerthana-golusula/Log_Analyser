@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <style>
+     
+select{
+  width:75%
+}
+      
+      </style>
+      
+         <script type="text/javascript">
+        const electron=require('electron');
+        const ipc=electron.ipcRenderer;
+        var string,i,j,rowvalue,columnvalue;
+          var arrayResponsibility=['NCRScotland.ActiveXFS','NCR.APTRA','Activate.NCR.ChnApp','NCR.Dundee.DC','Activate.NAMER.ChnApp'];
+          var arrayOwner=['BusOpSupportTasksNDC','BusOpSupportTasksAIT','SDMSP','BusOpSupportTasksNDC','GBRUSP','BusOpSupportTasksNAMER'];
+          var arraySupply=['Always On','Warning','Error','Exception']
+          console.log(arrayResponsibility[1]);
+          function applycolumnfilter(){
+            var columns=document.forms[0];
+              string=" ";
+         
+            for (i = 0; i < columns.length; i++) {
+              
+    if (columns[i].checked) {
+     document.getElementById("description").value=columns[i].value;
+     columnvalue=columns[i].value;
+     if(columnvalue=='Responsibility'){
+      string=" ";
+      
+        for(j=0;j<arrayResponsibility.length;j++){
+            string+="<option value="+arrayResponsibility[j]+">"+arrayResponsibility[j]+"</option>";
+            
+        }
+        
+        break;
+     }else if(columnvalue=='Owner'){
+      string=" ";
+        for(j=0;j<arrayOwner.length;j++){
+            string+="<option value="+arrayOwner[j]+">"+arrayOwner[j]+"</option>";
+           
+        }
+       
+        break;
+     }else if(columnvalue=='SupplyPoint'){
+       string=" ";
+        for(j=0;j<arraySupply.length;j++){
+            string+="<option value="+arraySupply[j]+">"+arraySupply[j]+"</option>";
+           
+        }
+      
+        break;
+     }
+    }
+}
+     document.getElementById("options").innerHTML+=string;
+    
+}
+      function filterbyrow(val){
+              rowvalue=val;
+            }
+     function func(){
+          applyfilter(rowvalue,columnvalue);
+     }
+
+     function applyfilter(rowvalue,columnvalue){
+      
+    ipc.send("filterattributes",rowvalue,columnvalue);
+    //console.log(jsonobj);
+    document.getElementById("prop").innerHTML="Hello";
+}
+            </script>
+    </head>
+<body>
+    <form onsubmit="return false">
+     <table>
+     <!-- <tr><td></td><td><input type=radio name="logical" value="and"><label for="and">and</label>
+      <input type=radio name="logical" value="or"><label for="or">or</label></td></tr> -->
+<tr> <td>Datasource:</td><td> <select id='datasource'>
+    <option value="GENTRACE">GENTRACE</option>
+    <option value="GENTRACE2">GENTRACE2</option>
+    <option value="GENTRACE3">GENTRACE3</option> 
+  </select></td></tr>
+
+  <tr><td style="vertical-align:0px;"> Elements:</td><td><input type="radio" name="columns" value="Responsibility"><label for="Responsibility">Responsibility</label>
+    <br><input type="radio" name="columns" value="Owner"><label for="Owner">Owner</label>
+    <br><input type="radio" name="columns" value="SupplyPoint"><label for="SupplyPoint">SupplyPoint</label>
+    <br><input type="radio" name="columns" value="FunctionName"><label for="FunctionName">FunctionName</label>
+    <br><button onclick="applycolumnfilter()">Apply</button></td></tr>
+<tr><td>Description:</td><td><input type=text id="description" placeholder="select using radio options" size="75"></td></tr>
+<tr><td></td><td><select required id='options' onchange='filterbyrow(this.value)' ><option>choose a value</option></select></td></tr>
+     </table>
+     <br> <input type="submit" onclick="func()" id="submit" value="Submit">
+                
+    </form>
+     
+    <script>
+           // require('./renderer.js')
+</script>
+
+</body>
+
+</html>

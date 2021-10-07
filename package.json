@@ -1,0 +1,19 @@
+{
+  "name": "loganalyser",
+  "version": "1.0.0",
+  "description": "eror log file \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dr\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Dor\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b log file analyser",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build":"electron-packager .NextGenPDA"
+  },
+  "author": "keerthana",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^5.9.2",
+    "electron": "^5.0.8"
+  },
+  "devdependencies":{
+    "electron-packager":"^3.2.0"
+  }
+}

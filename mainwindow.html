@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   <title>NextGenPDAnalyser</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <link rel="stylesheet" href="styles.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+     <style>
+       #spinner{
+         position:fixed;
+         top:50%;
+         left:50%;
+         display: flex;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  height:100%;
+       }
+     table{border-collapse:collapse;  table-layout:fixed;width: 100%;}
+td,th{padding:2px 5px;text-align:left; font-size: 12px;}
+table,th,td{border:1px solid #000;}
+columnSelector:hover{
+ border-right: 2px solid #000f;
+}
+     </style>
+     <script type="text/javascript" src="renderer.js"></script>
+     <!-- <script type="text/javascript" src="resizable.js"></script> -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+      <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.0.min.js">
+      </script>
+<script>
+// window.onpaint = loadspinner();
+// function loadspinner(){
+// document.getElementById("spinner").style="display:block";
+// }
+function unloadspinner(){
+  document.getElementById("spinner").style="display:none";
+} 
+</script>
+
+
+  </head>
+  <body onload="unloadspinner()"> 
+  <div>
+      <ul>
+          <li><a><i class="fa fa-step-forward fa-rotate-180"></i></a></li>
+          <li><a><i class="fa fa-play fa-rotate-180"></i></a></li>
+          <li><a><i class="fa fa-play"></i></a></li>
+         
+          <li><a><i class="fa fa-step-forward"></i></a></li>
+          <li><a><i class="fa fa-arrow-right fa-xs" area-hidden="true"></i></a></li>
+          <li><a id="bookmark"><i class="fa fa-flag"></i></a></li>
+          <li><a id="bookmarkforward"><span class="fa-stack fa-xs">
+              <i class="fa fa-flag fa-stack-2x"></i>
+              <i class="fa fa-repeat fa-pull-left fa-stack-1x fa-inverse"></i>
+            </span></a></li>
+            <li><a id=bookmarkbackward ><span class="fa-stack fa-xs">
+                <i class="fa fa-flag fa-stack-2x"></i>
+                <i class="fa fa-repeat fa-rotate-180 fa-stack-1x fa-inverse"></i>
+              </span></a></li>
+            
+              <li>
+                  <span class="fa-stack fa-xs">
+                      <i class="fa fa-flag fa-stack-1x"></i>
+                      <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                    </span>
+              </li>
+              <li><a><i class="fa fa-binoculars"></i></a></li>
+           <li><span class="fa-stack fa-xs">
+              <i class="fa fa-binoculars fa-stack-2x"></i>
+              <i class="fa fa-repeat fa-stack-1x fa-inverse"></i>
+            </span></li> 
+              <li><span class="fa-stack fa-xs">
+                  <i class="fa fa-binoculars fa-stack-2x"></i>
+                  <i class="fa fa-repeat fa-rotate-180 fa-stack-1x fa-inverse"></i>
+                </span></li>
+          <li><a id="filter" onclick="openfilterwindow()"><i class="fa fa-filter"></i></a></li>
+          <li><a><i class="fa fa-list-alt"></i></a></li>
+
+          <li><a><i class='fas fa-marker' ></i></a></li>
+          <li style="float:right"><a><b>...</b></a></li>
+        </ul>
+  </div> 
+        <div class="container" >
+                <div class="row">
+                  <div class="col-sm-1" id="pane1">
+                      <div class="icon-bar">
+                          <a class="active" id="cloneicon" onclick="cloneclick()"><i class="fa fa-clone"></i></a> 
+                          <a id="searchicon" onclick="searchclick()"><i class="fa fa-search"></i></a> 
+                          <a id="codeforkicon" onclick="codeforkclick()"><i class="fa fa-code-fork"></i></a> 
+                          <a id="bugicon" onclick="bugclick()"><i class="fa fa-bug"></i></a> 
+                          <a id="dashboardicon" onclick="dashboardclick()"><i class="fa fa-area-chart"></i></a>
+                          <a id="setting" onclick="settingclick()"><i class="fa fa-cog"></i></a>
+                          </div>
+
+                  </div>
+                       
+                  <div  id=pane2 class="col-sm-1" style="background-color:rgb(221, 219, 219);margin-right:0px;" >
+                  <div id="clonedisplay">
+                    <b>Recent</b>
+                    <table id="recenttable" class="table-sm table-borderless table-striped table-hover "></table>
+                  </div>  
+                  <div id=searchdisplay>
+                    <b>Search</b>
+                  </div>
+                  <div id="codeforkdisplay">
+                     <b>Code Work</b>
+                  </div>
+                  <div id="bugdisplay">
+                    <b>Bugs</b>
+                  </div>
+                  <div id="dashboarddisplay">
+                    <b>dashboard</b>
+                  </div>
+                  <div id="settingdisplay">
+                    <b>Settings</b>
+                  </div>
+                  </div>
+                   
+                  <div class="col-sm-10" style="width:100%;padding:0px; margin-right:-15px;">
+                    <!-- <div style="width:103.5%;"><table><tr><th>Record number</th><th>TimeStamp<th>RESPONSIBILITY</th><th>OWNER</th><th>SUPPLY POINT<th>FUNCTION</th></tr></table></div> -->
+                    <div class="tab" id="tabs">
+                      <!-- <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+                      <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+                      <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button> -->
+                    </div>
+                    <div id="logfiledisplay">
+                    <table id="demo" ></table>    
+                    <div id="spinner"><img id="img-spinner" src="spinner.gif" alt="loading"/></div>
+                    </div>
+                    <div id="properties">
+                      <table><tr><th>Name</th><th>Value</th></tr></table>
+                    <table id="prop"></table>
+                  
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+             <script>
+              //require('./renderer.js')
+</script>
+</body>
+
+
+</html>

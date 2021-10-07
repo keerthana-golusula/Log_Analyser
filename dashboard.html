@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="styles.css">
+		<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+	<style>
+	rect{
+		stroke:white;
+		stroke-width: 1;
+	}
+	line{
+		stroke:black;
+		stroke-width: 1;
+	}
+  
+	</style>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<script type="text/javascript">
+		    const electron=require('electron');
+	const ipcRenderer=electron.ipcRenderer;
+			function preloadFunc()
+			{
+				ipcRenderer.send("send-jsonobj");
+				alert("Allow this page to use the data");
+			}
+			window.onpaint = preloadFunc();
+			var errdata;
+    ipcRenderer.once("sent-jsonobj",function(event,jsonobj,data){
+		console.log(data);
+		errdata=data;
+	});
+		</script>
+<script>
+	
+				
+function showGraph(){
+	document.getElementById('graph').style='display:block';
+	document.getElementById('chart').style='display:none';
+	document.getElementById('compare').style='display:none';
+}
+function showchart(){
+	
+	document.getElementById('graph').style='display:none';
+	document.getElementById('chart').style='display:block';
+	document.getElementById('compare').style='display:none';
+}
+function comparepds(){
+	//alert("1");
+	document.getElementById('graph').style='display:none';
+	document.getElementById('chart').style='display:none';
+	document.getElementById('compare').style='display:block';
+
+}
+
+var colorcode={
+	"Other:Execute":"orange",
+	"Other:Authorized-Success":"yellow",
+	"Other:Continue after authorisation":"maroon",
+	"DeviceAction:Cash mix successful":"blue",
+	"DeviceAction:Cash presented":"grey",
+	"DeviceAction:":"black",
+	"CashDispenserService:CashDispenserNoCurrency":"pink",
+	"HostMessage:Failed to send message to host as status is TimedOutWaitingForResponse":"indigo",
+	"Other: Translet is committed":"violet",
+	"Other:Complete-Success":"Green",
+	"Other:Translet is reversed":"gold",
+	"Other:Complete-Failed":"Red"
+	};
+
+
+
+var data1=[{
+"RecordNo":100,
+"timestamp":" 2018-11-14T08:05:20.844",
+"txnName":"SupervisorManager.TriggerEntry"
+},{
+"RecordNo":101,
+"timestamp":" 2018-11-14T08:10:20.844",
+"txnName":"TransferTransaction.Execute"
+},
+{
+"RecordNo":102,
+"timestamp":"2018-11-14T08:12:20.844",
+"txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+},
+{
+"RecordNo":1,
+"timestamp":"2018-11-14T08:26:20.844",
+"txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+},
+{
+    "RecordNo":1,
+    "timestamp":"2018-11-14T08:28:20.844",
+    "txnName":"TransferTransaction.Execute"
+    },
+    {
+        "RecordNo":1,
+        "timestamp":"2018-11-14T08:30:20.844",
+        "txnName":"DepositTransaction.Execute"
+        },
+        {
+            "RecordNo":1,
+            "timestamp":"2018-11-14T08:35:20.844",
+            "txnName":"BalanceTransaction.Execute"
+            },
+            {
+                "RecordNo":1,
+                "timestamp":"2018-11-14T08:41:20.844",
+                "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                },
+            {
+            "RecordNo":1,
+                    "timestamp":"2018-11-14T08:45:20.844 ",
+                    "txnName":"BalanceTransaction.Execute"
+                    },
+                    {
+                        "RecordNo":1,
+                        "timestamp":"2018-11-14T09:00:20.844 ",
+                        "txnName":"SupervisorManager.TriggerEntry"
+                        },
+                        {
+                            "RecordNo":1,
+                            "timestamp":" 2018-11-14T09:15:20.844",
+                            "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                            },
+                            {
+                            "RecordNo":1,
+                            "timestamp":"2018-11-14T09:20:20.844",
+                            "txnName":"TransferTransaction.Execute"
+                            },
+                            {
+                            "RecordNo":1,
+                            "timestamp":"2018-11-14T09:30:20.844",
+                            "txnName":"BalanceTransaction.Execute"
+                            },
+                            {
+                                "RecordNo":1,
+                                "timestamp":"2018-11-14T09:43:20.844",
+                                "txnName":"TransferTransaction.Execute"
+                                },
+                                {
+                                "RecordNo":1,
+                                "timestamp":"2018-11-14T10:00:20.844",
+                                "txnName":"DepositTransaction.Execute"
+                                },
+                                {
+                                "RecordNo":1,
+                                "timestamp":"2018-11-14T10:10:20.844",
+                                "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                                },
+                                {
+                                    "RecordNo":1,
+                                    "timestamp":" 2018-11-14T10:30:20.844",
+                                    "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                                    },
+                                    {
+                                    "RecordNo":1,
+                                    "timestamp":"2018-11-14T10:41:20.844",
+                                    "txnName":"DepositTransaction.Execute"
+                                    },
+                                    {
+                                    "RecordNo":1,
+                                    "timestamp":"2018-11-14T10:46:20.844",
+                                    "txnName":"TransferTransaction.Execute"
+                                    }, 
+
+                                    {
+                                        "RecordNo":1,
+                                        "timestamp":"2018-11-14T10:50:20.844",
+                                        "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                                        },
+                                        {
+                                        "RecordNo":1,
+                                        "timestamp":"2018-11-14T10:52:20.844",
+                                        "txnName":"DepositTransaction.Execute"
+                                        },
+                                        {
+                                        "RecordNo":1,
+                                        "timestamp":"2018-11-14T10:55:20.844",
+                                        "txnName":"BalanceTransaction.Execute"
+                                        }, {
+                                            "RecordNo":1,
+                                            "timestamp":"2018-11-14T11:00:20.844",
+                                            "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                                            },
+                                            {
+                                            "RecordNo":1,
+                                            "timestamp":"2018-11-14T11:04:20.844",
+                                            "txnName":"DepositTransaction.Execute"
+                                            },
+                                            {
+                                            "RecordNo":1,
+                                            "timestamp":"2018-11-14T11:05:20.844",
+                                            "txnName":"SupervisorManager.TriggerEntry"
+                                            }, {
+                                                "RecordNo":1,
+                                                "timestamp":"2018-11-14T11:10:20.844",
+                                                "txnName":"BalanceTransaction.Execute"
+                                                },
+                                                {
+                                                "RecordNo":1,
+                                                "timestamp":"2018-11-14T11:32:20.844",
+                                                "txnName":"TransferTransaction.Execute"
+                                                },
+                                                {
+                                                "RecordNo":1,
+                                                "timestamp":"2018-11-14T11:40:20.844",
+                                                "txnName":"BalanceTransaction.Execute"
+                                                }, {
+                                                    "RecordNo":1,
+                                                    "timestamp":"2018-11-14T11:45:20.844",
+                                                    "txnName":"TransferTransaction.Execute"
+                                                    },
+                                                    {
+                                                    "RecordNo":1,
+                                                    "timestamp":"2018-11-14T11:50:20.844",
+                                                    "txnName":"DepositTransaction.Execute"
+                                                    },
+                                                    {
+                                                    "RecordNo":1,
+                                                    "timestamp":"2018-11-14T11:55:20.844",
+                                                    "txnName":"WithdrawalTransaction:WithdrawalBase.Execute"
+                                                    }, 
+                                                    {
+                                                        "RecordNo":1,
+                                                        "timestamp":"2018-11-14T12:00:20.844",
+                                                        "txnName":"SupervisorManager.TriggerEntry"
+                                                        }
+                                    
+                                    
+
+];
+
+var CashWdlFull={
+  "Data": [
+    {
+      "No": 27780,
+      "Supply Time": "2018-1-10T09:06:51.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.Execute",
+      "Free Text": "Other:Execute"
+    },
+    {
+      "No": 81655,
+      "Supply Time": "2018-1-10T09:07:51.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.DebitTransletAuthorised",
+      "Free Text": "Other:Authorized-Success"
+    },
+    {
+      "No": 88897,
+      "Supply Time": "2018-1-10T09:07:51.944",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.Continue",
+      "Free Text": "Other:Continue after authorisation"
+    },
+    {
+      "No": 90617,
+      "Supply Time": "2018-1-10T09:07:52.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "DispenserManager.StartDispense",
+      "Free Text": "DeviceAction:Cash mix successful"
+    },
+    {
+      "No": 95928,
+      "Supply Time": "2018-1-10T09:07:58.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "CashDispenserService:CashDispenserPresented",
+      "Free Text": "DeviceAction:Cash presented"
+    },
+    {
+      "No": 133874,
+      "Supply Time": "2018-1-10T09:08:41.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "CashDispenserService:CashDispenserNoCurrency",
+      "Free Text": "DeviceAction:"
+    },
+    {
+      "No": 155248,
+      "Supply Time": "2018-1-10T09:08:51.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "BusSrvNDC.Acct",
+      "Supply Point Type": "Always On",
+      "Function Name": "DebitReversalBusOp.ProcessNoResponse",
+      "Free Text": "HostMessage:Failed to send message to host as status is TimedOutWaitingForResponse"
+    },
+    {
+      "No": 155731,
+      "Supply Time": "2018-1-10T09:08:58.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.DebitTransletExecuted",
+      "Free Text": "Other:Translet is reversed"
+    },
+    {
+      "No": 163472,
+      "Supply Time": "2018-1-10T09:09:51.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.CompleteExecution",
+      "Free Text": "Other:Complete-Failed"
+    }
+  ]
+};
+
+var RegionsWdl={
+  "Data": [
+    {
+      "No": 1193,
+      "Supply Time": "2018-1-10T09:17:51.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.Execute",
+      "Free Text": "Other:Execute"
+    },
+    {
+      "No": 1251,
+      "Supply Time": "2018-1-10T09:17:56.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.DebitTransletAuthorised",
+      "Free Text": "Other:Authorized-Success"
+    },
+    {
+      "No": 3013,
+      "Supply Time": "2018-1-10T09:18:0.244",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.Continue",
+      "Free Text": "Other:Continue after authorisation"
+    },
+    {
+      "No": 3090,
+      "Supply Time": "2018-1-10T09:18:0.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "DispenserManager.StartDispense",
+      "Free Text": "DeviceAction:Cash mix successful"
+    },
+    {
+      "No": 4087,
+      "Supply Time": "2018-1-10T09:18:1.144",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "CashDispenserService.CashDispenserPresented",
+      "Free Text": "DeviceAction:Cash presented"
+    },
+    {
+      "No": 5184,
+      "Supply Time": "2018-1-10T09:18:1.544",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.DebitTransletExecuted",
+      "Free Text": "Other: Translet is committed"
+    },
+    {
+      "No": 6131,
+      "Supply Time": " 2018-1-10T09:18:1.844",
+      "Responsibility": "Activate.NCR.ChnApp",
+      "Owner": "WithdrawalCore",
+      "Supply Point Type": "Always On",
+      "Function Name": "WithdrawalTransactionUS:WithdrawalBase.CompleteExecution",
+      "Free Text": "Other:Complete-Success"
+    }
+
+  ]
+};
+
+
+    </script>
+
+</head>
+<body>
+<div class="container" >
+        <div class="row">
+		  <div class="col-sm-1" >
+				<div class="icon-bar">	
+			<a onclick="showGraph()"><i class="fa fa-hourglass-half" aria-hidden="true"></i></a>
+				<a onclick="showchart()"><i class="fa fa-asterisk"></i></a>
+				<a onclick="comparepds()"><i class="fa fa-balance-scale"></i></a>
+			   </div>
+
+  </div>
+  <div class="col-sm-11" style="padding-left:100px">
+	  <div id="chart" style="display:none">
+	  
+	</div>
+	  
+	  <div id="graph">
+		  <br>
+			<div style="text-align: center"><h3> Transaction TimeLine </h3></div>
+
+	  </div>
+	  <div id="compare" style="display:none">
+
+	  </div>
+	  <div>
+
+	  <script>
+			var i,l1=10,l2=10,l3=10,l4=10,l5=10;
+			console.log(data1.length);
+			var canvas=d3.select("#graph").append("svg").attr("width",1000).attr("height",500);
+			//var rect1=canvas.append("rect").attr("width",50).attr("height",10);
+			console.log("1");
+	var line =canvas.append("line").attr("x1",50).attr("y1",10).attr("x2",50).attr("y2",340);
+	canvas.append("line").attr("x1",50).attr("y1",340).attr("x2",500).attr("y2",340);
+	//canvas.append("text").attr("x",100).attr("y",360).text("tansactions in the order of occurences");
+			for(i=0;i<data1.length;i++){
+	 
+				if(data1[i]["timestamp"][11]=='0'&&data1[i]["timestamp"][12]=='8'){
+					 if(l1==10){
+						canvas.append("text").attr("x",0).attr("y",70).text("8-9");
+						l1=l1+50;
+					 }
+					if(data1[i]["txnName"]=='WithdrawalTransaction:WithdrawalBase.Execute'){
+					var rect=canvas.append("rect").attr("x",l1).attr("y",60).attr("width",50).attr("height",10).attr("fill","red").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+					rect.on("click",function(d,i){
+						//alert("hello"+i);
+					});
+			
+				}else if(data1[i]["txnName"]=="SupervisorManager.TriggerEntry"){
+					var rect=canvas.append("rect").attr("x",l1).attr("y",60).attr("width",50).attr("height",10).attr("fill","blue").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="DepositTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l1).attr("y",60).attr("width",50).attr("height",10).attr("fill","green").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="TransferTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l1).attr("y",60).attr("width",50).attr("height",10).attr("fill","yellow").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="BalanceTransaction.Execute")
+						   {
+							   var rect=canvas.append("rect").attr("x",l1).attr("y",60).attr("width",50).attr("height",10).attr("fill","grey").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+						   }
+						   l1=l1+50;
+			
+				}  else if(data1[i]["timestamp"][11]=='0'&&data1[i]["timestamp"][12]=='9'){
+					if(l2==10){
+						canvas.append("text").attr("x",0).attr("y",130).text("9-10");
+						l2=l2+50;
+					 }
+					if(data1[i]["txnName"]=='WithdrawalTransaction:WithdrawalBase.Execute'){
+					var rect=canvas.append("rect").attr("x",l2).attr("y",120).attr("width",50).attr("height",10).attr("fill","red").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="SupervisorManager.TriggerEntry"){
+					var rect=canvas.append("rect").attr("x",l2).attr("y",120).attr("width",50).attr("height",10).attr("fill","blue").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="DepositTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l2).attr("y",120).attr("width",50).attr("height",10).attr("fill","green").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="TransferTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l2).attr("y",120).attr("width",50).attr("height",10).attr("fill","yellow").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="BalanceTransaction.Execute")
+						   {
+							   var rect=canvas.append("rect").attr("x",l2).attr("y",120).attr("width",50).attr("height",10).attr("fill","grey").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+						   }
+						   l2=l2+50;
+	
+				} else if(data1[i]["timestamp"][11]=='1'&&data1[i]["timestamp"][12]=='0'){
+					if(l3==10){
+						canvas.append("text").attr("x",0).attr("y",190).text("10-11");
+						l3=l3+50;
+					 }
+					if(data1[i]["txnName"]=='WithdrawalTransaction:WithdrawalBase.Execute'){
+					var rect=canvas.append("rect").attr("x",l3).attr("y",180).attr("width",50).attr("height",10).attr("fill","red").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="SupervisorManager.TriggerEntry"){
+					var rect=canvas.append("rect").attr("x",l3).attr("y",180).attr("width",50).attr("height",10).attr("fill","blue").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="DepositTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l3).attr("y",180).attr("width",50).attr("height",10).attr("fill","green").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="TransferTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l3).attr("y",180).attr("width",50).attr("height",10).attr("fill","yellow").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="BalanceTransaction.Execute")
+						   {
+							   var rect=canvas.append("rect").attr("x",l3).attr("y",180).attr("width",50).attr("height",10).attr("fill","grey").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+						   }
+						   l3=l3+50;
+	
+				} else if(data1[i]["timestamp"][11]=='1'&&data1[i]["timestamp"][12]=='1'){
+					
+					if(l4==10){
+						canvas.append("text").attr("x",0).attr("y",250).text("11-12");
+						l4=l4+50;
+					 }if(data1[i]["txnName"]=='WithdrawalTransaction:WithdrawalBase.Execute'){
+					var rect=canvas.append("rect").attr("x",l4).attr("y",240).attr("width",50).attr("height",10).attr("fill","red").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="SupervisorManager.TriggerEntry"){
+					var rect=canvas.append("rect").attr("x",l4).attr("y",240).attr("width",50).attr("height",10).attr("fill","blue").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="DepositTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l4).attr("y",240).attr("width",50).attr("height",10).attr("fill","green").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="TransferTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l4).attr("y",240).attr("width",50).attr("height",10).attr("fill","yellow").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="BalanceTransaction.Execute")
+						   {
+							   var rect=canvas.append("rect").attr("x",l4).attr("y",240).attr("width",50).attr("height",10).attr("fill","grey").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+						   }
+						   l4=l4+50;
+	
+				}     
+				else if(data1[i]["timestamp"][11]=='1'&&data1[i]["timestamp"][12]=='2'){
+					if(l5==10){
+						canvas.append("text").attr("x",0).attr("y",310).text("12-13");
+						l5=l5+50;
+					 }
+					if(data1[i]["txnName"]=='WithdrawalTransaction:WithdrawalBase.Execute'){
+					var rect=canvas.append("rect").attr("x",l5).attr("y",300).attr("width",50).attr("height",10).attr("fill","red").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="SupervisorManager.TriggerEntry"){
+					var rect=canvas.append("rect").attr("x",l5).attr("y",300).attr("width",50).attr("height",10).attr("fill","blue").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="DepositTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l5).attr("y",300).attr("width",50).attr("height",10).attr("fill","green").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="TransferTransaction.Execute"){
+					var rect=canvas.append("rect").attr("x",l5).attr("y",300).attr("width",50).attr("height",10).attr("fill","yellow").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+				}else if(data1[i]["txnName"]=="BalanceTransaction.Execute")
+						   {
+							   var rect=canvas.append("rect").attr("x",l5).attr("y",300).attr("width",50).attr("height",10).attr("fill","grey").append("title").text(function(d) { return data1[i]["txnName"]+"\n"+data1[i]["timestamp"] ; });
+			
+						   }
+						   l5=l5+50;
+	
+				}     
+				
+			}
+
+			// select the svg area
+var SVG = canvas;
+// create a list of keys
+var keys = ["Withdrawal", "Deposit", "Balance", "Transfer", "Supervisor Trigger"]
+
+// Usually you have a color scale in your chart already
+var color = d3.scaleOrdinal()
+  .domain(keys)
+  .range(["Red","green","grey","yellow","blue"]);
+// Add one dot in the legend for each name.
+var size = 20
+SVG.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 700)
+    .attr("y", function(d,i){ return 100 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+SVG.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 700 + size*1.2)
+    .attr("y", function(d,i){ return 100 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+			  
+				</script>
+			<script>
+
+					// set the dimensions and margins of the graph
+			var width = 1000
+				height = 500
+				margin = 70
+			
+			// The radius of the pieplot is half the width or half the height (smallest one). I substract a bit of margin.
+			var radius = Math.min(width, height) / 2 - margin
+			
+			// append the svg object to the div called 'my_dataviz'
+			var svg = d3.select("#chart")
+			  .append("svg")
+				.attr("width", width)
+				.attr("height", height)
+					var svg2=svg.append("g")
+				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+		
+			// Create dummy data
+			var data =JSON.parse(errdata);
+			console.log(data);
+			// {"Error": 10, "Exception": 20, "Warning":30, "Always":40}
+			var sum=data["Error"]+data["Exception"]+data["Warning"]+data["Always"];
+			// set the color scale
+			var color = d3.scaleOrdinal()
+			  .domain(data)
+			  .range(["red","Orange","Yellow","Green"]);
+			
+			// Compute the position of each group on the pie:
+			var pie = d3.pie()
+			  .value(function(d) {return d.value; })
+			var data_ready = pie(d3.entries(data))
+			// Now I know that group A goes from 0 degrees to x degrees and so on.
+			
+			// shape helper to build arcs:
+			var arcGenerator = d3.arc()
+			  .innerRadius(0)
+			  .outerRadius(radius)
+			
+			// Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+			svg2
+			  .selectAll('mySlices')
+			  .data(data_ready)
+			  .enter()
+			  .append('path')
+				.attr('d', arcGenerator)
+				.attr('fill', function(d){ return(color(d.data.key)) })
+				.attr("stroke", "black")
+				.style("stroke-width", "2px")
+				.style("opacity", 0.7)
+			
+			// Now add the annotation. Use the centroid method to get the best coordinates
+			svg2
+			  .selectAll('mySlices')
+			  .data(data_ready)
+			  .enter()
+			  .append('text')
+			  .text(function(d){ return d.data.value})
+			  .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+			  .style("text-anchor", "middle")
+			  .style("font-size", 17)
+
+			  
+			// select the svg area
+var SVG2 = svg; 
+//d3.select("#chart").append("svg").attr("width",1000).attr("height",500);
+
+// create a list of keys
+var keys = ["Error", "Exceptions", "Warnings", "Always On"]
+
+// Usually you have a color scale in your chart already
+var color = d3.scaleOrdinal()
+  .domain(keys)
+  .range(["Red","Orange","yellow","green"]);
+// Add one dot in the legend for each name.
+var size = 20
+SVG2.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("rect")
+    .attr("x", 700)
+    .attr("y", function(d,i){ return 100 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("width", size)
+    .attr("height", size)
+    .style("fill", function(d){ return color(d)})
+
+// Add one dot in the legend for each name.
+SVG2.selectAll("mylabels")
+  .data(keys)
+  .enter()
+  .append("text")
+    .attr("x", 700 + size*1.2)
+    .attr("y", function(d,i){ return 100 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
+</script>
+<script>
+var l11=460;
+
+var canvas3=d3.select("#compare").append("svg").attr("width",1000).attr("height",700);
+		var line2=canvas3.append("line").attr("x1",50).attr("y1",10).attr("x2",50).attr("y2",500);
+		canvas3.append("line").attr("x1",50).attr("y1",500).attr("x2",500).attr("y2",500);
+		
+		for(i=0;i<CashWdlFull["Data"].length;i++){
+			//alert("11");
+			if(CashWdlFull["Data"][i]["Free Text"]=="Other:Execute"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+				l11=l11-40
+			}
+			else if(CashWdlFull["Data"][i]["Free Text"]=="Other:Authorized-Success")
+			{
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="Other:Continue after authorisation"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="DeviceAction:Cash mix successful"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="DeviceAction:Cash presented"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+            }else if(CashWdlFull["Data"][i]["Free Text"]=="DeviceAction:"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="HostMessage:Failed to send message to host as status is TimedOutWaitingForResponse"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="Other:Translet is reversed"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+                l11=l11-40;
+			}else if(CashWdlFull["Data"][i]["Free Text"]=="Other:Complete-Failed"){
+				canvas3.append("rect").attr("x",100).attr("y",l11).attr("width",10).attr("height",40).attr("fill",colorcode[CashWdlFull["Data"][i]["Free Text"]]).append("title").text(function(d) { return CashWdlFull["Data"][i]["Function Name"]+"\n"+CashWdlFull["Data"][i]["Supply Time"] ; })
+				l11=l11-40;
+				canvas3.append("text").attr("x",100).attr("y",l11).text("Failure Transaction ");
+			}
+
+		}
+		var l12=460;
+		for(i=0;i<RegionsWdl["Data"].length;i++){
+			if(RegionsWdl["Data"][i]["Free Text"]=="Other:Execute"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+				l12=l12-40
+			}
+			else if(RegionsWdl["Data"][i]["Free Text"]=="Other:Authorized-Success")
+			{
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+                l12=l12-40;
+			}else if(RegionsWdl["Data"][i]["Free Text"]=="Other:Continue after authorisation"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+                l12=l12-40;
+			}else if(RegionsWdl["Data"][i]["Free Text"]=="DeviceAction:Cash mix successful"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+                l12=l12-40;
+			}else if(RegionsWdl["Data"][i]["Free Text"]=="DeviceAction:Cash presented"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+                l12=l12-40;
+            }else if(RegionsWdl["Data"][i]["Free Text"]=="Other: Translet is committed"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+                l12=l12-40;
+			}else if(RegionsWdl["Data"][i]["Free Text"]=="Other:Complete-Success"){
+				canvas3.append("rect").attr("x",200).attr("y",l12).attr("width",10).attr("height",40).attr("fill",colorcode[RegionsWdl["Data"][i]["Free Text"]]).append("title").text(function(d) { return RegionsWdl["Data"][i]["Function Name"]+"\n"+RegionsWdl["Data"][i]["Supply Time"] ; })
+				l12=l12-40;
+				canvas3.append("text").attr("x",200).attr("y",l12).text("Successful Transaction");
+			}
+		}
+		canvas3.append("text").attr("x",50).attr("y",540).text("Comparison of two transaction logs");
+		
+		
+		</script>
+
+		<script>
+			//alert("111");
+		d3.json("/Users/kg185141/Downloads/LogAnalyser-20190730T055227Z-001/LogAnalyser/CashWDLFull.json", function(data) {
+			//alert("111");
+    console.log(data);
+});
+		</script>
+	
+
+
+	</div>
+  
+</div>
+</div>
+</body>
+</html>
